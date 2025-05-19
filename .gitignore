@@ -1,0 +1,33 @@
+# Entorno virtual
+venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de datos SQLite
+*.sqlite3
+
+# Archivos temporales o de sistema
+.DS_Store
+Thumbs.db
+
+# Configuración local
+.env
+
+# Archivos de migración conflictivos
+*/migrations/*.py
+*/migrations/*.pyc
+!*/migrations/__init__.py
+
+# Archivos de logs
+*.log
+
+# Archivos de cache
+*.bak
+*.swp
+*.tmp
+
+# Node/npm si lo usas
+node_modules/
