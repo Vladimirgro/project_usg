@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+      crossorigin="anonymous">
+    <!-- Custom styles (opcional) -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+    <style>
+      /* --- Estilos mínimos para el layout --- */
+      body {
+        overflow-x: hidden;
+      }
+      /* Ajuste para sidebar fija en pantallas ≥ md */
+      @media (min-width: 768px) {
+        #sidebarMenu {
+          position: fixed;
+          top: 56px; /* altura de navbar */
+          bottom: 0;
+          left: 0;
+          padding: 1rem 0;
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+          z-index: 100; /* debajo de navbar */
+        }
+        main {
+          margin-left: 16.666667%; /* col-md-2 width */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar TOP -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <!-- Botón para mostrar/ocultar sidebar en móviles -->
+        <button
+          class="navbar-toggler d-md-none me-2"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand" href="#">USG Admin</a>
+
+        <div class="collapse navbar-collapse justify-content-end">
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Cerrar sesión</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav
+          id="sidebarMenu"
+          class="col-12 col-md-2 collapse d-md-block bg-light sidebar"
+        >
+          <div class="position-sticky">
+            <ul class="nav flex-column pt-3">
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                  <span class="fs-5">🏠</span> Inicio
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <span class="fs-5">👥</span> Gestión de usuarios
+                </a>
+              </li>
+              <!-- Agrega más enlaces según sea necesario -->
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Contenido principal -->
+        <main class="col px-4 py-4" role="main">
+          {% if messages %}
+            {% for message in messages %}
+              <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+
+    <!-- Bootstrap bundle (con Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+  </body>
+</html>
