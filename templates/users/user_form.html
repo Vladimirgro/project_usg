@@ -1,0 +1,33 @@
+{% extends "dashboard/home.html" %}
+{% load static %}
+{% block title %}{% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+  <h2 class="mb-4">{% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+        {% for error in field.errors %}
+          <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    {# Alertas globales del formulario (no‑field errors) #}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+      </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">💾 Guardar</button>
+    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

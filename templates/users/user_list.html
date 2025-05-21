@@ -1,0 +1,74 @@
+{% extends "dashboard/home.html" %}
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Usuarios</h2>
+    {% if perms.core.add_customuser %}
+      <a href="{% url 'user_create' %}" class="btn btn-success">➕ Nuevo usuario</a>
+    {% endif %}
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Email</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Activo</th>
+          <th scope="col" class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.nombre }}</td>
+            <td>{{ user.get_rol_display }}</td>
+            <td>{{ user.is_active|yesno:"✅,❌" }}</td>
+            <td class="text-end">
+              {% if perms.core.change_customuser %}
+                <a href="{% url 'user_update' user.pk %}" class="btn btn-sm btn-primary me-1">✏️</a>
+              {% endif %}
+              {% if perms.core.delete_customuser %}
+                <a href="{% url 'user_delete' user.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar usuario?');">🗑️</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">No hay usuarios registrados.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# paginación si configuraste paginate_by #}
+  {% if is_paginated %}
+    <nav aria-label="Paginación">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page=1">« Primera</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹ Anterior</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">« Primera</span></li>
+          <li class="page-item disabled"><span class="page-link">‹ Anterior</span></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente ›</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última »</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Siguiente ›</span></li>
+          <li class="page-item disabled"><span class="page-link">Última »</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+{% endblock %}

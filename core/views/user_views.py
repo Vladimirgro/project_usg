@@ -1,0 +1,41 @@
+
+# core/views/user_views.py
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.urls import reverse_lazy
+
+from core.models.user import CustomUser
+from core.forms.forms import (        # ajusta import si tus forms viven en otro módulo
+    CustomUserCreationForm,
+    CustomUserChangeForm,
+)
+
+# ---- LISTA ----
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model               = CustomUser
+    template_name       = "users/user_list.html"
+    context_object_name = "users"
+    permission_required = "core.view_customuser"
+
+# ---- CREAR ----
+class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model         = CustomUser
+    form_class    = CustomUserCreationForm
+    template_name = "users/user_form.html"
+    success_url   = reverse_lazy("user_list")
+    permission_required = "core.add_customuser"
+
+# ---- ACTUALIZAR ----
+class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model       = CustomUser
+    form_class  = CustomUserChangeForm
+    template_name = "users/user_form.html"
+    success_url = reverse_lazy("user_list")
+    permission_required = "core.change_customuser"
+
+# ---- ELIMINAR ----
+class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model         = CustomUser
+    template_name = "users/user_confirm_delete.html"
+    success_url   = reverse_lazy("user_list")
+    permission_required = "core.delete_customuser"
