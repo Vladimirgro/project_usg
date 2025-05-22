@@ -25,7 +25,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
 
     email = models.EmailField(unique=True)
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=50)
+    apaterno = models.CharField(max_length=50)
+    amaterno = models.CharField(max_length=50)
     rol = models.CharField(max_length=20, choices=ROLES)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

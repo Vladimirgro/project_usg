@@ -3,9 +3,6 @@ from django.urls import reverse_lazy
 from core.forms.auth_forms import CustomAuthForm
 from django.contrib import messages
 
-
-
-
 class CustomLoginView(LoginView):
     template_name = 'auth/login.html'
     authentication_form = CustomAuthForm
