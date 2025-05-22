@@ -1,33 +1,103 @@
 {% extends "dashboard/home.html" %}
 {% load static %}
-{% block title %}{% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}{% endblock %}
+
+{% block title %}
+  {% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-0">
-  <h2 class="mb-4">{% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}</h2>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">{% if object.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}</h4>
+        </div>
+        <div class="card-body">
+          <form id="userForm" method="post" novalidate>
+            {% csrf_token %}
 
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {% for field in form %}
-      <div class="mb-3">
-        {{ field.label_tag }}
-        {{ field }}
-        {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
-        {% for error in field.errors %}
-          <div class="invalid-feedback d-block">{{ error }}</div>
-        {% endfor %}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  {{ error }}<br>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- Sección: Datos personales -->
+            <h5 class="mb-3"><i class="fas fa-user"></i> Datos personales</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                {{ form.nombre }}
+                <div class="invalid-feedback">Por favor ingresa un nombre válido.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.apaterno.id_for_label }}" class="form-label">Apellido paterno</label>
+                {{ form.amaterno }}
+                <div class="invalid-feedback">Por favor ingresa un apellido válido.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.apaterno.id_for_label }}" class="form-label">Apellido materno</label>
+                {{ form.amaterno }}
+                <div class="invalid-feedback">Por favor ingresa un apellido válido.</div>
+              </div>              
+            </div>
+
+            <!-- Sección: Datos de acceso -->
+            <h5 class="mb-3"><i class="fas fa-lock"></i> Acceso</h5>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico</label>
+                {{ form.email }}
+                <div class="invalid-feedback">Ingresa un correo válido.</div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="{{ form.rol.id_for_label }}" class="form-label">Rol</label>
+                {{ form.rol }}
+                <div class="invalid-feedback">Selecciona un rol válido.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña</label>
+                {{ form.password1 }}
+                <div class="invalid-feedback">Por favor ingresa un apellido válido.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar contraseña</label>
+                {{ form.password2 }}
+                <div class="invalid-feedback">Por favor ingresa un apellido válido.</div>
+              </div>              
+              <div class="col-md-6 mb-3 form-check">
+                {{ form.is_active }}
+                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Activo</label>
+              </div>
+              <div class="col-md-6 mb-3 form-check">
+                {{ form.is_staff }}
+                <label class="form-check-label" for="{{ form.is_staff.id_for_label }}">Staff</label>
+              </div>
+            </div>
+
+            <div class="text-end mt-4">
+              <button type="submit" class="btn btn-success">Guardar</button>
+              <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+          </form>
+        </div>
       </div>
-    {% endfor %}
-
-    {# Alertas globales del formulario (no‑field errors) #}
-    {% if form.non_field_errors %}
-      <div class="alert alert-danger">
-        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
-      </div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Cancelar</a>
-  </form>
+    </div>
+  </div>
 </div>
+
+<!-- JavaScript de validación dinámica -->
+<script>
+  document.getElementById('userForm').addEventListener('submit', function (event) {
+    const form = event.target;
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  });
+</script>
 {% endblock %}

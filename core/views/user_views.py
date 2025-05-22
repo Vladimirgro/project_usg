@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 
+
 from core.models.user import CustomUser
 from core.forms.forms import (        # ajusta import si tus forms viven en otro módulo
     CustomUserCreationForm,
@@ -16,6 +17,11 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name       = "users/user_list.html"
     context_object_name = "users"
     permission_required = "core.view_customuser"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CustomUserCreationForm()  # ← esto es clave para el modal
+        return context
 
 # ---- CREAR ----
 class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

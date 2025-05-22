@@ -6,7 +6,11 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0">Usuarios</h2>
     {% if perms.core.add_customuser %}
-      <a href="{% url 'user_create' %}" class="btn btn-success">➕ Nuevo usuario</a>
+      <!-- <a href="{% url 'user_create' %}" class="btn btn-success">➕ Nuevo usuario</a> -->
+      <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#userModal">
+        <i class="fas fa-user-plus"></i> Nuevo Usuario
+      </button>
+
     {% endif %}
   </div>
 
@@ -17,6 +21,8 @@
           <th scope="col">ID</th>
           <th scope="col">Email</th>
           <th scope="col">Nombre</th>
+          <th scope="col">Apaterno</th>
+          <th scope="col">Amaterno</th>
           <th scope="col">Rol</th>
           <th scope="col">Activo</th>
           <th scope="col" class="text-end">Acciones</th>
@@ -28,6 +34,8 @@
             <td>{{ user.id }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.nombre }}</td>
+            <td>{{ user.apaterno }}</td>
+            <td>{{ user.amaterno }}</td>
             <td>{{ user.get_rol_display }}</td>
             <td>{{ user.is_active|yesno:"✅,❌" }}</td>
             <td class="text-end">
@@ -46,6 +54,43 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+    <!-- Modal para formulario de usuario -->
+  <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="userModalLabel">Nuevo usuario</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="userFormModal" method="post" novalidate>
+            {% csrf_token %}            
+            <div class="row">
+              {% for field in form.visible_fields %}
+                <div class="col-md-6 mb-3">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>                  
+                  {{ field }}
+                  {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
   {# paginación si configuraste paginate_by #}
@@ -71,4 +116,16 @@
     </nav>
   {% endif %}
 </div>
+
+<script>
+  document.getElementById('userFormModal').addEventListener('submit', function (event) {
+    const form = event.target;
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  });
+</script>
+
 {% endblock %}
