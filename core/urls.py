@@ -3,6 +3,8 @@ from django.urls import path
 from core.views.auth_views import CustomLoginView, CustomLogoutView
 from core.views.dashboard import DashboardHomeView
 
+from core.views.user_views import create_user_ajax
+
 from core.views.user_views import (
     UserListView, UserCreateView, UserUpdateView, UserDeleteView
 )
@@ -22,4 +24,5 @@ urlpatterns += [
     path("usuarios/nuevo/", UserCreateView.as_view(), name="user_create"),
     path("usuarios/<int:pk>/editar/", UserUpdateView.as_view(), name="user_update"),
     path("usuarios/<int:pk>/eliminar/", UserDeleteView.as_view(), name="user_delete"),
+    path('usuarios/crear/', create_user_ajax, name='user_create_ajax'),
 ]

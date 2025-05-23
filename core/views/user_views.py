@@ -5,11 +5,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.urls import reverse_lazy
 
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+
 from core.models.user import CustomUser
 from core.forms.forms import (        # ajusta import si tus forms viven en otro módulo
     CustomUserCreationForm,
     CustomUserChangeForm,
 )
+
+
+@require_POST
+def create_user_ajax(request):
+    form = CustomUserCreationForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'success': True, 'message': 'Usuario creado exitosamente'})
+    else:
+        errors = form.errors.as_json()
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
 
 # ---- LISTA ----
 class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
