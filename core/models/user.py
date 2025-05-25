@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
-class CustomUserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager): #Modelo personalizado para super usuario
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("El email es obligatorio")
@@ -16,13 +16,13 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin): #Modelo personalizado de user para crear Tabla
     ROLES = [
-        ('gerente', 'Gerente'),
-        ('admin', 'Administrador'),
-        ('medico', 'Médico'),
-        ('asistente', 'Asistente'),
-    ]
+                ('gerente', 'Gerente'),
+                ('admin', 'Administrador'),
+                ('medico', 'Médico'),
+                ('asistente', 'Asistente'),
+            ]
 
     email = models.EmailField(unique=True)
     nombre = models.CharField(max_length=50)

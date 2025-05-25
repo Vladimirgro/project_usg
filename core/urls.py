@@ -12,7 +12,8 @@ from core.views.user_views import (
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 
-urlpatterns = [       
+urlpatterns = [   
+        
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('', DashboardHomeView.as_view(), name='dashboard'),

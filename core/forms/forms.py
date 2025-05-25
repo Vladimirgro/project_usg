@@ -3,8 +3,15 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from core.models.user import CustomUser
  
 class CustomUserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}))
-    password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}))
+    password1 = forms.CharField(
+        label="Contraseña", 
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'})
+    )
+    
+    password2 = forms.CharField(
+        label="Confirmar contraseña",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'})
+    )
 
     class Meta:
         model  = CustomUser
@@ -33,7 +40,19 @@ class CustomUserCreationForm(forms.ModelForm):
         return user
 
 class CustomUserChangeForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField()
+    #password = ReadOnlyPasswordHashField()
+    
+    password1 = forms.CharField(
+        label="Nueva contraseña",
+        required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    
+    password2 = forms.CharField(
+        label="Confirmar nueva contraseña",
+        required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model  = CustomUser
